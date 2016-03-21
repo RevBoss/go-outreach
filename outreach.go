@@ -33,7 +33,7 @@ func (c Config) NewOutreachClient(accessToken string, refreshToken string, token
 
 	if len(accessToken) == 0 || len(refreshToken) == 0 || len(tokenExpires) == 0 {
 		err := errors.New("Missing required client parameters")
-		return nil, err
+		return oc, err
 	}
 
 	var creds Credentials
@@ -43,13 +43,13 @@ func (c Config) NewOutreachClient(accessToken string, refreshToken string, token
 	texp, err := time.Parse(time.RFC3339, tokenExpires)
 	if err != nil {
 		err := errors.New("Invalid tokenExpires time format - requires RFC3339")
-		return nil, err
+		return oc, err
 	}
 	creds.TokenExpires = texp
 
 	client, err := Client(c, creds)
 	if err != nil {
-		return nil, err
+		return oc, err
 	}
 
 	oc.Client = client
