@@ -1,8 +1,11 @@
 package outreach
 
 import (
+	"encoding/json"
 	"errors"
+	"io/ioutil"
 	"net/http"
+	"strconv"
 )
 
 type Prospect struct {
@@ -84,6 +87,25 @@ type ProspectInstance struct {
 
 func (i *ProspectInstance) Get(id int) (Prospect, error) {
 	p := Prospect{}
+
+	if i.Client == nil {
+		return p, errors.New("You must assign a HTTP client.")
+	}
+
+	resp, e := i.Client.Get("https://api.outreach.io/1.0/prospect/" + strconv.Itoa(id))
+	if e != nil {
+		return p, e
+	}
+
+	body, e := ioutil.ReadAll(resp.Body)
+	if e != nil {
+		return p, e
+	}
+
+	e = json.Unmarshal(body, &p)
+	if e != nil {
+		return p, e
+	}
 
 	return p, nil
 }
