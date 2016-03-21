@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"errors"
 	"io/ioutil"
-	"net/http"
 )
 
 type SequenceResponse struct {
@@ -44,18 +43,14 @@ type SequenceLinks struct {
 	Self string
 }
 
-type SequenceInstance struct {
-	Client *http.Client
-}
-
-func (s *SequenceInstance) Get(opts ...int) (SequenceResponse, error) {
+func (c *OutreachClient) GetSequences(opts ...int) (SequenceResponse, error) {
 	seq := SequenceResponse{}
 
-	if s.Client == nil {
-		return seq, errors.New("You must assign a HTTP client.")
+	if c.Client == nil {
+		return seq, errors.New("You must assign an Outreach Client.")
 	}
 
-	resp, e := s.Client.Get("https://api.outreach.io/1.0/sequences")
+	resp, e := c.Client.Get("https://api.outreach.io/1.0/sequences")
 	if e != nil {
 		return seq, e
 	}

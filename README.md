@@ -8,27 +8,26 @@ A go library for Outreach. https://app.outreach.io
 
 Oauth Configuration:
 ```
-	var conf Config
-	conf.ClientId = YOUR OUTREACH CLIENT ID
-	conf.ClientSecret = YOUR OUTREACH CLIENT SECRET
-	conf.RedirectURL = YOUR OUTREACH OAUTH REDIRECT
-	conf.Scopes = []string{"CREATE_PROSPECTS_PERMISSION, READ_SEQUENCES_PERMISSION, UPDATE_SEQUENCES_PERMISSION"}
+	clientId := YOUR OUTREACH CLIENT ID
+	clientSecret := YOUR OUTREACH CLIENT SECRET
+	redirectURL := YOUR OUTREACH OAUTH REDIRECT
+	scopes := []string{"CREATE_PROSPECTS_PERMISSION, READ_SEQUENCES_PERMISSION, UPDATE_SEQUENCES_PERMISSION"}
 
-	var creds Credentials
-	creds.AccessToken = YOUR ACCESS TOKEN
-	creds.RefreshToken = YOUR REFRESH TOKEN
-	expires, err := time.Parse(time.RFC3339, "2016-03-21T18:17:17Z")
+	config, err := Configure(clientId, clientSecret, redirectURL, scopes)
 
-	client, err := Client(conf, creds)
+	accessToken := YOUR ACCESS TOKEN
+	refreshToken := YOUR REFRESH TOKEN
+	expires := "2016-03-21T18:17:17Z"
+
+	client, err := config.NewOutreachClient(accessToken, refreshToken, expires)
+
 ```
 
 Get Sequences:
 ```
-	client, err := Client(conf, creds)
-
-	si := &SequenceInstance{}
-	si.Client = client
-
-	seq, err := si.Get()
+	config, err := Configure(clientId, clientSecret, redirectURL, scopes)
+	client, err := config.NewOutreachClient(accessToken, refreshToken, expires)
 	
+	sequences, err := client.GetSequences()
+
 ```

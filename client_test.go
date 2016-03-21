@@ -11,11 +11,11 @@ var (
 	redirectURL  = ""
 	accessToken  = ""
 	refreshToken = ""
-	expires      = ""
+	expires      = "2016-03-21T18:17:17Z"
 	scopes       = []string{"CREATE_PROSPECTS_PERMISSION, READ_SEQUENCES_PERMISSION, UPDATE_SEQUENCES_PERMISSION"}
 )
 
-func TestClient(t *testing.T) {
+func TestRawClient(t *testing.T) {
 
 	var conf Config
 	conf.ClientId = clientId
@@ -41,34 +41,33 @@ func TestClient(t *testing.T) {
 
 }
 
-func TestClientSequences(t *testing.T) {
+func TestInitClient(t *testing.T) {
 
-	var conf Config
-	conf.ClientId = clientId
-	conf.ClientSecret = clientSecret
-	conf.RedirectURL = redirectURL
-	conf.Scopes = scopes
-
-	var creds Credentials
-	creds.AccessToken = accessToken
-	creds.RefreshToken = refreshToken
-	expires := expires
-
-	tt, err := time.Parse(time.RFC3339, expires)
+	config, err := Configure(clientId, clientSecret, redirectURL, scopes)
 	if err != nil {
-		t.Errorf("Expires is empty or invalid: %s, Error: %s", expires, err.Error())
+		t.Fail()
 	}
-	creds.TokenExpires = tt
 
-	client, err := Client(conf, creds)
+	client, err := config.NewOutreachClient(accessToken, refreshToken, expires)
 	if err != nil || client == nil {
 		t.Fail()
 	}
 
-	si := &SequenceInstance{}
-	si.Client = client
+}
 
-	seq, err := si.Get()
+func TestClientSequences(t *testing.T) {
+
+	config, err := Configure(clientId, clientSecret, redirectURL, scopes)
+	if err != nil {
+		t.Fail()
+	}
+
+	client, err := config.NewOutreachClient(accessToken, refreshToken, expires)
+	if err != nil || client == nil {
+		t.Fail()
+	}
+
+	seq, err := client.GetSequences()
 	if err != nil {
 		t.Errorf("Sequence Error: %w", err)
 	}
