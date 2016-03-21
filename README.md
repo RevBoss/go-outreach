@@ -17,10 +17,9 @@ Oauth Configuration:
 
 	accessToken := YOUR ACCESS TOKEN
 	refreshToken := YOUR REFRESH TOKEN
-	expires := "2016-03-21T18:17:17Z"
+	expires := RFC3339 DATE TIME
 
 	client, err := config.NewOutreachClient(accessToken, refreshToken, expires)
-
 ```
 
 Get Sequences:
@@ -29,5 +28,22 @@ Get Sequences:
 	client, err := config.NewOutreachClient(accessToken, refreshToken, expires)
 	
 	sequences, err := client.GetSequences()
+```
 
+Post Prospect to Sequence
+```
+	TODO
+```
+
+Get Prospect
+```
+	config, err := Configure(clientId, clientSecret, redirectURL, scopes)
+	client, err := config.NewOutreachClient(accessToken, refreshToken, expires)
+
+	prospect, err := client.GetProspect(id)
+```
+
+Post Prospect
+```
+	TODO
 ```

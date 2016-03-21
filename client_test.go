@@ -77,3 +77,28 @@ func TestClientSequences(t *testing.T) {
 	}
 
 }
+
+func TestClientProspect(t *testing.T) {
+
+	config, err := Configure(clientId, clientSecret, redirectURL, scopes)
+	if err != nil {
+		t.Fail()
+	}
+
+	client, err := config.NewOutreachClient(accessToken, refreshToken, expires)
+	if err != nil || client == nil {
+		t.Fail()
+	}
+
+	id := 2
+
+	prospect, err := client.GetProspect(id)
+	if err != nil {
+		t.Errorf("Prospect Error: %w", err)
+	}
+
+	if len(prospect.Data.Attributes.Contact.Email) == 0 {
+		t.Fail()
+	}
+
+}

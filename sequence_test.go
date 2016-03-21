@@ -10,9 +10,9 @@ import (
 )
 
 func TestSequenceGetWithoutClient(t *testing.T) {
-	si := &SequenceInstance{}
+	oc := &OutreachClient{}
 
-	_, e := si.Get()
+	_, e := oc.GetSequences()
 	if e == nil {
 		Fail(t, errors.New("Sequence should error if a client is not provided."))
 	}
@@ -27,11 +27,11 @@ func TestSequenceGet(t *testing.T) {
 
 	j, _ := json.Marshal(expected)
 	client := MockClient(j)
-	si := &SequenceInstance{
+	oc := &OutreachClient{
 		Client: client,
 	}
 
-	s, e := si.Get()
+	s, e := oc.GetSequences()
 	Fail(t, e)
 
 	if !reflect.DeepEqual(s, expected) {
