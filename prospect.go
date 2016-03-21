@@ -3,6 +3,8 @@ package outreach
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"strconv"
@@ -81,8 +83,35 @@ type ProspectMeta struct {
 	Custom []string
 }
 
+type ProspectResponse struct {
+	Data   ProspectResponseData
+	Errors []map[string]interface{}
+}
+
+type ProspectResponseData struct {
+	ID int
+}
+
 type ProspectInstance struct {
 	Client *http.Client
+}
+
+func (p *Prospect) Read(t []byte) (int, error) {
+	j, e := json.Marshal(p)
+	if e != nil {
+		return 0, e
+	}
+
+	if len(t) < len(j) {
+		return len(t), nil
+	}
+
+	copy(t, j)
+	return len(j), io.EOF
+}
+
+func (p *Prospect) Close() error {
+	return nil
 }
 
 func (i *ProspectInstance) Get(id int) (Prospect, error) {
@@ -110,10 +139,31 @@ func (i *ProspectInstance) Get(id int) (Prospect, error) {
 	return p, nil
 }
 
-func (i *ProspectInstance) Post(p Prospect) error {
+func (i *ProspectInstance) Post(p Prospect) (ProspectResponse, error) {
+	pr := ProspectResponse{}
+
 	if i.Client == nil {
-		return errors.New("You must assign a HTTP client.")
+		return pr, errors.New("You must assign a HTTP client.")
 	}
 
-	return errors.New("Failed to post prospect")
+	resp, e := i.Client.Post("https://api.outreach.io/1.0/prospect", "application/json", &p)
+	if e != nil {
+		return pr, e
+	}
+
+	body, e := ioutil.ReadAll(resp.Body)
+	if e != nil {
+		return pr, e
+	}
+
+	e = json.Unmarshal(body, &pr)
+	if e != nil {
+		return pr, e
+	}
+
+	if len(pr.Errors) > 0 {
+		return pr, fmt.Errorf("Got error response: %+v\n", pr.Errors)
+	}
+
+	return pr, nil
 }

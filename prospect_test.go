@@ -12,22 +12,39 @@ import (
 func TestProspectWithoutClient(t *testing.T) {
 	pi := &ProspectInstance{}
 
-	e := pi.Post(Prospect{})
+	_, e := pi.Post(Prospect{})
 	if e == nil {
 		Fail(t, errors.New("Prospect should error if a client is not provided."))
 	}
 }
 
 func TestProspectPost(t *testing.T) {
-	expected := Prospect{}
+	p := Prospect{
+		Data: ProspectData{
+			Attributes: ProspectAttributes{
+				Address: ProspectAddress{
+					Street: []string{"123 Fake St"},
+				},
+			},
+		},
+	}
+	expected := ProspectResponse{
+		Data: ProspectResponseData{
+			ID: 1,
+		},
+	}
 
 	j, _ := json.Marshal(expected)
 	pi := &ProspectInstance{
 		Client: MockClient(j),
 	}
 
-	e := pi.Post(expected)
+	resp, e := pi.Post(p)
 	Fail(t, e)
+
+	if !reflect.DeepEqual(resp, expected) {
+		Fail(t, fmt.Errorf("Got: %+v\nExpected: %+v\n", resp, expected))
+	}
 }
 
 func TestProspectGet(t *testing.T) {
