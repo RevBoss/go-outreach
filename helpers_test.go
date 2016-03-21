@@ -2,6 +2,7 @@ package outreach_test
 
 import (
 	"io"
+	"io/ioutil"
 	"net/http"
 	"testing"
 )
@@ -42,6 +43,13 @@ func (b Body) Close() error {
 func (t Transport) RoundTrip(req *http.Request) (*http.Response, error) {
 	resp := &http.Response{
 		Body: t.body,
+	}
+
+	if req.Body != nil {
+		_, e := ioutil.ReadAll(req.Body)
+		if e != nil {
+			return resp, e
+		}
 	}
 
 	return resp, nil
