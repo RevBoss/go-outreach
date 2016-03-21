@@ -9,9 +9,10 @@ var (
 	clientId     = ""
 	clientSecret = ""
 	redirectURL  = ""
-	accessToken  = "2dd462117dae04761c3051b6059b300390f5caeeb529753f8927f314144a33d1"
-	refreshToken = "0023eeb0343e6b282cbbf6839e4611e85af890a31ed0952f9ec54d404a6db02f"
-	expires      = "2016-03-10T09:38:55Z"
+	accessToken  = ""
+	refreshToken = ""
+	expires      = ""
+	scopes       = []string{"CREATE_PROSPECTS_PERMISSION, READ_SEQUENCES_PERMISSION, UPDATE_SEQUENCES_PERMISSION"}
 )
 
 func TestClient(t *testing.T) {
@@ -20,7 +21,7 @@ func TestClient(t *testing.T) {
 	conf.ClientId = clientId
 	conf.ClientSecret = clientSecret
 	conf.RedirectURL = redirectURL
-	conf.Scopes = []string{"read_sequences"}
+	conf.Scopes = scopes
 
 	var creds Credentials
 	creds.AccessToken = accessToken
@@ -46,7 +47,7 @@ func TestClientSequences(t *testing.T) {
 	conf.ClientId = clientId
 	conf.ClientSecret = clientSecret
 	conf.RedirectURL = redirectURL
-	conf.Scopes = []string{"read_sequences"}
+	conf.Scopes = scopes
 
 	var creds Credentials
 	creds.AccessToken = accessToken
@@ -69,7 +70,7 @@ func TestClientSequences(t *testing.T) {
 
 	seq, err := si.Get()
 	if err != nil {
-		t.Errorf("Sequence Error: %s", err)
+		t.Errorf("Sequence Error: %w", err)
 	}
 
 	if len(seq.Data) == 0 {
