@@ -3,8 +3,10 @@ package outreach
 import (
 	"encoding/json"
 	"errors"
+	"io"
 	"io/ioutil"
 	"net/http"
+	"strconv"
 )
 
 type SequenceResponse struct {
@@ -20,7 +22,9 @@ type SequenceData struct {
 }
 
 type SequenceAttributes struct {
-	Name string
+	Name    string
+	Created string
+	Updated string
 }
 
 type SequenceMeta struct {
@@ -44,8 +48,92 @@ type SequenceLinks struct {
 	Self string
 }
 
+type SequenceAddProspect struct {
+	Data SequenceAddProspectData
+}
+
+type SequenceAddProspectData struct {
+	Relationships SequenceAddProspectRelationships
+}
+
+type SequenceAddProspectRelationships struct {
+	Prospects []SequenceAddProspectProspect
+}
+
+type SequenceAddProspectProspect struct {
+	Data SequenceAddProspectProspectData
+}
+
+type SequenceAddProspectProspectData struct {
+	ID string
+}
+
+type SequenceAddProspectResponse struct {
+	Data  SequenceData
+	Links SequenceLinks
+}
+
 type SequenceInstance struct {
 	Client *http.Client
+}
+
+func (sp *SequenceAddProspect) Read(t []byte) (int, error) {
+	j, e := json.Marshal(sp)
+	if e != nil {
+		return 0, e
+	}
+
+	if len(t) < len(j) {
+		return len(t), nil
+	}
+
+	copy(t, j)
+	return len(j), io.EOF
+}
+
+func (sp *SequenceAddProspect) Close() error {
+	return nil
+}
+
+func (s *SequenceInstance) AddProspect(id int, pids ...int) (SequenceAddProspectResponse, error) {
+	seq := SequenceAddProspectResponse{}
+
+	if s.Client == nil {
+		return seq, errors.New("You must assign a HTTP client.")
+	}
+
+	sp := SequenceAddProspect{}
+
+	for _, v := range pids {
+		sp.Data.Relationships.Prospects =
+			append(sp.Data.Relationships.Prospects, SequenceAddProspectProspect{
+				Data: SequenceAddProspectProspectData{
+					ID: strconv.Itoa(v),
+				},
+			})
+	}
+
+	req, e := http.NewRequest("PATCH", "https://api.outreach.io/1.0/sequences/"+strconv.Itoa(id), &sp)
+	if e != nil {
+		return seq, e
+	}
+
+	resp, e := s.Client.Do(req)
+	if e != nil {
+		return seq, e
+	}
+
+	body, e := ioutil.ReadAll(resp.Body)
+	if e != nil {
+		return seq, e
+	}
+
+	e = json.Unmarshal(body, &seq)
+	if e != nil {
+		return seq, e
+	}
+
+	return seq, nil
 }
 
 func (s *SequenceInstance) Get(opts ...int) (SequenceResponse, error) {

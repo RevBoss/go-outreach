@@ -1,9 +1,13 @@
 package outreach_test
 
 import (
+	"encoding/json"
+	"errors"
+	. "github.com/revboss/go-outreach"
 	"io"
 	"io/ioutil"
 	"net/http"
+	"strings"
 	"testing"
 )
 
@@ -11,6 +15,7 @@ type Body []byte
 type Transport struct {
 	body Body
 }
+type AddProspectTransport Transport
 
 func Fail(t *testing.T, e error) {
 	if e != nil {
@@ -22,6 +27,14 @@ func Fail(t *testing.T, e error) {
 func MockClient(body []byte) *http.Client {
 	hc := &http.Client{
 		Transport: Transport{body},
+	}
+
+	return hc
+}
+
+func MockAddProspectClient(body []byte) *http.Client {
+	hc := &http.Client{
+		Transport: AddProspectTransport{body},
 	}
 
 	return hc
@@ -53,4 +66,30 @@ func (t Transport) RoundTrip(req *http.Request) (*http.Response, error) {
 	}
 
 	return resp, nil
+}
+
+func (ap AddProspectTransport) RoundTrip(req *http.Request) (*http.Response, error) {
+	if req.Body == nil {
+		return nil, errors.New("Expected request body")
+	}
+
+	sr := SequenceAddProspectResponse{}
+
+	e := json.Unmarshal(ap.body, &sr)
+	if e != nil {
+		return nil, e
+	}
+
+	split := strings.Split(req.URL.Path, "/")
+	id := split[len(split)-1]
+	sr.Data.ID = id
+
+	j, e := json.Marshal(sr)
+	if e != nil {
+		return nil, e
+	}
+
+	return &http.Response{
+		Body: Body(j),
+	}, nil
 }

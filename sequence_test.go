@@ -9,6 +9,35 @@ import (
 	"testing"
 )
 
+func TestSequenceAddProspectWithoutClient(t *testing.T) {
+	si := &SequenceInstance{}
+
+	_, e := si.AddProspect(1, 1)
+	if e == nil {
+		Fail(t, errors.New("SequenceInstance should error if a client is not provided."))
+	}
+}
+
+func TestSequenceAddProspect(t *testing.T) {
+	expected := SequenceAddProspectResponse{
+		Data: SequenceData{
+			ID: "1",
+		},
+	}
+
+	j, _ := json.Marshal(expected)
+	si := &SequenceInstance{
+		Client: MockAddProspectClient(j),
+	}
+
+	resp, e := si.AddProspect(1, 1)
+	Fail(t, e)
+
+	if !reflect.DeepEqual(resp, expected) {
+		Fail(t, fmt.Errorf("Expected: %+v\nGot: %+v\n", expected, resp))
+	}
+}
+
 func TestSequenceGetWithoutClient(t *testing.T) {
 	si := &SequenceInstance{}
 
