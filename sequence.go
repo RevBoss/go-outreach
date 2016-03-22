@@ -16,7 +16,7 @@ type SequenceResponse struct {
 }
 
 type SequenceData struct {
-	ID         string
+	ID         int
 	Type       string
 	Attributes SequenceAttributes
 }
