@@ -74,9 +74,14 @@ func (ap AddProspectTransport) RoundTrip(req *http.Request) (*http.Response, err
 		return nil, errors.New("Expected request body")
 	}
 
+	_, e := ioutil.ReadAll(req.Body)
+	if e != nil {
+		return nil, e
+	}
+
 	sr := SequenceAddProspectResponse{}
 
-	e := json.Unmarshal(ap.body, &sr)
+	e = json.Unmarshal(ap.body, &sr)
 	if e != nil {
 		return nil, e
 	}
