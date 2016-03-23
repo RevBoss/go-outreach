@@ -21,7 +21,7 @@ func TestSequenceAddProspectWithoutClient(t *testing.T) {
 func TestSequenceAddProspect(t *testing.T) {
 	expected := SequenceAddProspectResponse{
 		Data: SequenceData{
-			ID: "1",
+			ID: 1,
 		},
 	}
 

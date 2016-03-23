@@ -7,6 +7,7 @@ import (
 	"io"
 	"io/ioutil"
 	"net/http"
+	"strconv"
 	"strings"
 	"testing"
 )
@@ -81,7 +82,10 @@ func (ap AddProspectTransport) RoundTrip(req *http.Request) (*http.Response, err
 	}
 
 	split := strings.Split(req.URL.Path, "/")
-	id := split[len(split)-1]
+	id, e := strconv.Atoi(split[len(split)-1])
+	if e != nil {
+		return nil, errors.New("ID must be an integer")
+	}
 	sr.Data.ID = id
 
 	j, e := json.Marshal(sr)
