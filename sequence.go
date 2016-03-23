@@ -3,6 +3,7 @@ package outreach
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -10,9 +11,10 @@ import (
 )
 
 type SequenceResponse struct {
-	Data  []SequenceData
-	Meta  SequenceMeta
-	Links SequenceLinks
+	Data   []SequenceData
+	Meta   SequenceMeta
+	Links  SequenceLinks
+	Errors []map[string]interface{}
 }
 
 type SequenceData struct {
@@ -69,8 +71,9 @@ type SequenceAddProspectProspectData struct {
 }
 
 type SequenceAddProspectResponse struct {
-	Data  SequenceData
-	Links SequenceLinks
+	Data   SequenceData
+	Links  SequenceLinks
+	Errors []map[string]interface{}
 }
 
 type SequenceInstance struct {
@@ -133,6 +136,10 @@ func (s *SequenceInstance) AddProspect(id int, pids ...int) (SequenceAddProspect
 		return seq, e
 	}
 
+	if len(seq.Errors) > 0 {
+		return seq, fmt.Errorf("Got error response: %+v\n", seq.Errors)
+	}
+
 	return seq, nil
 }
 
@@ -156,6 +163,10 @@ func (s *SequenceInstance) Get(opts ...int) (SequenceResponse, error) {
 	e = json.Unmarshal(body, &seq)
 	if e != nil {
 		return seq, e
+	}
+
+	if len(seq.Errors) > 0 {
+		return seq, fmt.Errorf("Got error response: %+v\n", seq.Errors)
 	}
 
 	return seq, nil

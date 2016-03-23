@@ -11,7 +11,8 @@ import (
 )
 
 type Prospect struct {
-	Data ProspectData `json:"data"`
+	Data   ProspectData `json:"data"`
+	Errors []map[string]interface{}
 }
 
 type ProspectData struct {
@@ -134,6 +135,10 @@ func (i *ProspectInstance) Get(id int) (Prospect, error) {
 	e = json.Unmarshal(body, &p)
 	if e != nil {
 		return p, e
+	}
+
+	if len(p.Errors) > 0 {
+		return p, fmt.Errorf("Got error response: %+v\n", p.Errors)
 	}
 
 	return p, nil
