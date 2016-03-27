@@ -104,7 +104,7 @@ func (i *ProspectInstance) Get(id int) (Prospect, error) {
 		return p, errors.New("You must assign a HTTP client.")
 	}
 
-	resp, e := i.Client.Get("https://api.outreach.io/1.0/prospect/" + strconv.Itoa(id))
+	resp, e := i.Client.Get("https://api.outreach.io/1.0/prospects/" + strconv.Itoa(id))
 	if e != nil {
 		return p, e
 	}
@@ -138,7 +138,7 @@ func (i *ProspectInstance) Post(p Prospect) (ProspectResponse, error) {
 		return pr, e
 	}
 
-	resp, e := i.Client.Post("https://api.outreach.io/1.0/prospect", "application/json", bytes.NewReader(j))
+	resp, e := i.Client.Post("https://api.outreach.io/1.0/prospects", "application/json", bytes.NewReader(j))
 	if e != nil {
 		return pr, e
 	}
