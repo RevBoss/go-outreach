@@ -51,23 +51,23 @@ type SequenceLinks struct {
 }
 
 type SequenceAddProspect struct {
-	Data SequenceAddProspectData `json: "data"`
+	Data SequenceAddProspectData `json:"data"`
 }
 
 type SequenceAddProspectData struct {
-	Relationships SequenceAddProspectRelationships `json: "relationships"`
+	Relationships SequenceAddProspectRelationships `json:"relationships"`
 }
 
 type SequenceAddProspectRelationships struct {
-	Prospects []SequenceAddProspectProspect `json: "prospects"`
+	Prospects []SequenceAddProspectProspect `json:"prospects"`
 }
 
 type SequenceAddProspectProspect struct {
-	Data SequenceAddProspectProspectData `json: "data"`
+	Data SequenceAddProspectProspectData `json:"data"`
 }
 
 type SequenceAddProspectProspectData struct {
-	ID string `json: "id"`
+	ID string `json:"id"`
 }
 
 type SequenceAddProspectResponse struct {
