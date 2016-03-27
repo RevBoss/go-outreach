@@ -1,10 +1,10 @@
 package outreach
 
 import (
+	"bytes"
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io"
 	"io/ioutil"
 	"net/http"
 	"strconv"
@@ -97,24 +97,6 @@ type ProspectInstance struct {
 	Client *http.Client
 }
 
-func (p *Prospect) Read(t []byte) (int, error) {
-	j, e := json.Marshal(p)
-	if e != nil {
-		return 0, e
-	}
-
-	if len(t) < len(j) {
-		return len(t), nil
-	}
-
-	copy(t, j)
-	return len(j), io.EOF
-}
-
-func (p *Prospect) Close() error {
-	return nil
-}
-
 func (i *ProspectInstance) Get(id int) (Prospect, error) {
 	p := Prospect{}
 
@@ -151,7 +133,12 @@ func (i *ProspectInstance) Post(p Prospect) (ProspectResponse, error) {
 		return pr, errors.New("You must assign a HTTP client.")
 	}
 
-	resp, e := i.Client.Post("https://api.outreach.io/1.0/prospect", "application/json", &p)
+	j, e := json.Marshal(p)
+	if e != nil {
+		return pr, e
+	}
+
+	resp, e := i.Client.Post("https://api.outreach.io/1.0/prospect", "application/json", bytes.NewBuffer(j))
 	if e != nil {
 		return pr, e
 	}
