@@ -138,7 +138,7 @@ func (i *ProspectInstance) Post(p Prospect) (ProspectResponse, error) {
 		return pr, e
 	}
 
-	resp, e := i.Client.Post("https://api.outreach.io/1.0/prospect", "application/json", bytes.NewBuffer(j))
+	resp, e := i.Client.Post("https://api.outreach.io/1.0/prospect", "application/json", bytes.NewReader(j))
 	if e != nil {
 		return pr, e
 	}
