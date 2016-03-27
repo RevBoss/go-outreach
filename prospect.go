@@ -23,7 +23,7 @@ type ProspectAttributes struct {
 	Company  ProspectCompany  `json:"company,omitempty"`
 	Contact  ProspectContact  `json:"contact"`
 	Personal ProspectPersonal `json:"personal"`
-	Social   ProspectSocial   `json:"socila,omitempty"`
+	Social   ProspectSocial   `json:"social,omitempty"`
 	Meta     ProspectMeta     `json:"metadata,omitempty"`
 }
 
