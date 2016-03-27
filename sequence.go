@@ -1,6 +1,7 @@
 package outreach
 
 import (
+	"bytes"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -80,24 +81,6 @@ type SequenceInstance struct {
 	Client *http.Client
 }
 
-func (sp *SequenceAddProspect) Read(t []byte) (int, error) {
-	j, e := json.Marshal(sp)
-	if e != nil {
-		return 0, e
-	}
-
-	if len(t) < len(j) {
-		return len(t), nil
-	}
-
-	copy(t, j)
-	return len(j), io.EOF
-}
-
-func (sp *SequenceAddProspect) Close() error {
-	return nil
-}
-
 func (s *SequenceInstance) AddProspect(id int, pids ...int) (SequenceAddProspectResponse, error) {
 	seq := SequenceAddProspectResponse{}
 
@@ -116,7 +99,12 @@ func (s *SequenceInstance) AddProspect(id int, pids ...int) (SequenceAddProspect
 			})
 	}
 
-	req, e := http.NewRequest("PATCH", "https://api.outreach.io/1.0/sequences/"+strconv.Itoa(id), &sp)
+	j, e := json.Marshal(sp)
+	if e != nil {
+		return seq, e
+	}
+
+	req, e := http.NewRequest("PATCH", "https://api.outreach.io/1.0/sequences/"+strconv.Itoa(id), bytes.NewReader(j))
 	if e != nil {
 		return seq, e
 	}
