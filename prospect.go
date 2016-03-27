@@ -11,76 +11,76 @@ import (
 )
 
 type Prospect struct {
-	Data ProspectData `json: "data"`
+	Data ProspectData `json:"data"`
 }
 
 type ProspectData struct {
-	Attributes ProspectAttributes `json: "attributes"`
+	Attributes ProspectAttributes `json:"attributes"`
 }
 
 type ProspectAttributes struct {
-	Address  ProspectAddress  `json: "address,omitempty"`
-	Company  ProspectCompany  `json: "company,omitempty"`
-	Contact  ProspectContact  `json: "contact"`
-	Personal ProspectPersonal `json: "personal"`
-	Social   ProspectSocial   `json: "socila,omitempty"`
-	Meta     ProspectMeta     `json: "metadata,omitempty"`
+	Address  ProspectAddress  `json:"address,omitempty"`
+	Company  ProspectCompany  `json:"company,omitempty"`
+	Contact  ProspectContact  `json:"contact"`
+	Personal ProspectPersonal `json:"personal"`
+	Social   ProspectSocial   `json:"socila,omitempty"`
+	Meta     ProspectMeta     `json:"metadata,omitempty"`
 }
 
 type ProspectAddress struct {
-	City    string   `json: "city,omitempty"`
-	State   string   `json: "state,omitempty"`
-	Country string   `json: "country,omitempty"`
-	Street  []string `json: "street,omitempty"`
-	Zip     string   `json: "zip,omitempty"`
+	City    string   `json:"city,omitempty"`
+	State   string   `json:"state,omitempty"`
+	Country string   `json:"country,omitempty"`
+	Street  []string `json:"street,omitempty"`
+	Zip     string   `json:"zip,omitempty"`
 }
 
 type ProspectCompany struct {
-	Name     string `json: "name,omitempty"`
-	Type     string `json: "type,omitempty"`
-	Industry string `json: "industry,omitempty"`
-	Size     string `json: "size,omitempty"`
-	Locality string `json: "locality,omitempty"`
+	Name     string `json:"name,omitempty"`
+	Type     string `json:"type,omitempty"`
+	Industry string `json:"industry,omitempty"`
+	Size     string `json:"size,omitempty"`
+	Locality string `json:"locality,omitempty"`
 }
 
 type ProspectContact struct {
-	Timezone string        `json: "timezone,omitempty"`
-	Email    string        `json: "email"`
-	Phone    ProspectPhone `json: "phone,omitempty"`
+	Timezone string        `json:"timezone,omitempty"`
+	Email    string        `json:"email"`
+	Phone    ProspectPhone `json:"phone,omitempty"`
 }
 
 type ProspectPhone struct {
-	Personal string `json: "personal,omitempty"`
-	Work     string `json: "work,omitempty"`
+	Personal string `json:"personal,omitempty"`
+	Work     string `json:"work,omitempty"`
 }
 
 type ProspectPersonal struct {
-	Name       ProspectName `json: "name"`
-	Gender     string       `json: "gender,omitempty"`
-	Occupation string       `json: "occupation,omitempty"`
-	Title      string       `json: "title,omitempty"`
+	Name       ProspectName `json:"name"`
+	Gender     string       `json:"gender,omitempty"`
+	Occupation string       `json:"occupation,omitempty"`
+	Title      string       `json:"title,omitempty"`
 }
 
 type ProspectName struct {
-	First string `json: "first"`
-	Last  string `json: "last"`
+	First string `json:"first"`
+	Last  string `json:"last"`
 }
 
 type ProspectSocial struct {
-	Website  string `json: "website,omitempty"`
-	Facebook string `json: "facebook,omitempty"`
-	LinkedIn string `json: "linkedin,omitempty"`
-	Plus     string `json: "plus,omitempty"`
-	Quora    string `json: "quora,omitempty"`
-	Twitter  string `json: "twitter,omitempty"`
+	Website  string `json:"website,omitempty"`
+	Facebook string `json:"facebook,omitempty"`
+	LinkedIn string `json:"linkedin,omitempty"`
+	Plus     string `json:"plus,omitempty"`
+	Quora    string `json:"quora,omitempty"`
+	Twitter  string `json:"twitter,omitempty"`
 }
 
 type ProspectMeta struct {
-	OptOut bool     `json: "opted_out"`
-	Source string   `json: "source,omitempty"`
-	Notes  []string `json: "notes,omitempty"`
-	Tags   []string `json: "tags,omitempty"`
-	Custom []string `json: "custom,omitempty"`
+	OptOut bool     `json:"opted_out"`
+	Source string   `json:"source,omitempty"`
+	Notes  []string `json:"notes,omitempty"`
+	Tags   []string `json:"tags,omitempty"`
+	Custom []string `json:"custom,omitempty"`
 }
 
 type ProspectResponse struct {
