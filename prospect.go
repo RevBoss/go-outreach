@@ -32,14 +32,14 @@ type ProspectAddress struct {
 	State   string   `json: "state,omitempty"`
 	Country string   `json: "country,omitempty"`
 	Street  []string `json: "street,omitempty"`
-	Zip     int      `json: "zip,omitempty"`
+	Zip     string   `json: "zip,omitempty"`
 }
 
 type ProspectCompany struct {
 	Name     string `json: "name,omitempty"`
 	Type     string `json: "type,omitempty"`
 	Industry string `json: "industry,omitempty"`
-	Size     int    `json: "size,omitempty"`
+	Size     string `json: "size,omitempty"`
 	Locality string `json: "locality,omitempty"`
 }
 
